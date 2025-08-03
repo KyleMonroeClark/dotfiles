@@ -1,13 +1,10 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, pkgs, ... }:
 
 {
   imports =
-    [ # Include the results of the hardware scan.
+    [
       ./hardware-configuration.nix
+      ./modules/bluetooth.nix
     ];
 
   # Bootloader.
@@ -49,6 +46,11 @@
   # Enable the KDE Plasma Desktop Environment.
   services.displayManager.sddm.enable = true;
   services.desktopManager.plasma6.enable = true;
+
+  #Firmware updating for known thunderbolt issue on t480; probably can remove this later or
+  #maybe add it to a module.
+  services.fwupd.enable = true;
+  hardware.enableAllFirmware = true;
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -98,7 +100,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim
     wget
     git
   ];
